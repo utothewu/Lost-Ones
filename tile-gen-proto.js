@@ -1,41 +1,50 @@
-var stage = new createjs.Stage("canvas"); //link stage
+"use strict";
 
-var sheet = []; //container for subTiles
+let sheet;
+let columns = 10;
+let rows = 10;
+let tDim = 16
 
-//subTile types
-var grass = new createjs.Graphics().beginStroke("#000000").beginFill("#00ff00").drawRect(0, 0, 16, 16);
-var path = new createjs.Graphics().beginStroke("#000000").beginFill("#ff8888").drawRect(0, 0, 16, 16);
 
-var num;
-
-sheetGen(20, 20, 16, 16);
-changeTile(22, path);
-stage.update();
-
-//changes a subTile's type
-
-function changeTile(subTile, type) {
-  sheet[subTile].set({graphics: path})
+function setup() {
+  createCanvas(320, 320);
+  tileGen(0, 0);
+  tileGen(160, 0);
+  tileGen(0, 160);
+  tileGen(160, 160);
 }
 
+function draw() {
 
-//generates subTile sheet
-function sheetGen(numTileX, numTileY, tileSizeX, tileSizeY) {
-  for(var n = 0; n < numTileY; n++) {
-    console.log("row " + n);
+}
 
-    for(var i = 0; i < numTileX; i++) {
-      num = i + (n*numTileY);
-      sheet[num] = new createjs.Shape(grass);
-      sheet[num].x = i * tileSizeX;
-      sheet[num].y = n * tileSizeY;
-      stage.addChild(sheet[num]);
+function init() {
 
-      console.log("drawing " + i);
+}
+
+function tileGen(startX, startY) {
+  sheet = new Array(columns);
+  for (let i = 0; i < columns; i++) {
+    sheet[i] = new Array(rows);
+  }
+
+  for ( let i = 0; i < columns; i++) {
+    for ( let j = 0; j < rows; j++) {
+      let x = startX + tDim * i;
+      let y = startY + tDim * j;
+
+      noiseDetail(4, 0.35);
+      let RGB = Math.round(Math.abs(255 * noise(x, y)));
+      fill(RGB);
+
+      if(RGB > 179) fill("#0000ff")
+      if(RGB < 180) fill("#a4c903")
+      if(RGB < 100) fill("#80b405");
+      if(RGB < 60) fill("#008f00");
+      if(RGB < 45) fill("#006f5f");
+
+      stroke(0);
+      square(x, y, tDim);
     }
   }
-}
-
-function treeGen(numTileX, numTileY) {
-
 }
