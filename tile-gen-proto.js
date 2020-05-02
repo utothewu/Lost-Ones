@@ -1,33 +1,21 @@
 "use strict";
 
 let sheet;
-let columns = 10;
-let rows = 10;
+let columns = 50;
+let rows = 50;
 let tDim = 32;
 
-class tile {
-  draw() {
-    if(this.type === "flowers"){
-      text(1, this.x, this.y);
-    } else if (this.type === "grass") {
-      text(2, this.x, this.y);
-    } else if (this.type === "tallGrass") {
-      text(3, this.x, this.y);
-    } else if (this.type === "bush") {
-      text(4, this.x, this.y);
-    } else if (this.type === "tree") {
-      text(5, this.x, this.y);
-    }
-  }
-}
+
 
 function setup() {
-  createCanvas(640, 640);
-  tileGen(0, 0)
+  createCanvas(windowWidth, windowHeight);
+  tileGen(0, 0);
+
 }
 
 function draw() {
-
+  background(windowWidth,windowHeight);
+  hash.render(4, mouseX, mouseY);
 }
 
 function init() {
@@ -51,9 +39,9 @@ function tileGen(startX, startY) {
   for ( let i = 0; i < columns; i++) {
     for ( let j = 0; j < rows; j++) {
       //perlin noise
-      let xOff = i * 0.5;
-      let yOff = j * 0.5;
-      noiseDetail(3, 0.35);
+      let xOff = i * 0.4;
+      let yOff = j * 0.4;
+      noiseDetail(4, 0.35);
       let noiseOut = Math.round(Math.abs(255 * noise(xOff, yOff)));
 
       //type assignment
@@ -63,16 +51,14 @@ function tileGen(startX, startY) {
       if(noiseOut > 54 && noiseOut < 80) sheet[i][j].type = "bush";
       if(noiseOut > 0 && noiseOut < 55) sheet[i][j].type = "tree";
 
-      console.log(sheet[i][j]);
+      //console.log(sheet[i][j]);
 
       let x = (i * tDim) + startX;
       let y = (j * tDim) + startY;
       sheet[i][j].x = x;
       sheet[i][j].y = y;
 
-      fill(noiseOut);
-      textSize(20);
-      sheet[i][j].draw()
+      hash.add(sheet[i][j])
     }
   }
 }
